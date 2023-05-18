@@ -12,7 +12,7 @@ fi
 
 echo "INFO: DOWNLOADING TB3 MODEL"
 
-if [ -d tb3/Assets/Model/Hakoniwa/Robots/BurgerBot_Model ]
+if [ -f tb3/Assets/Model/Hakoniwa/Robots/BurgerBot_Model/TB3Burgar_01.fbx ]
 then
     echo "INFO: TB3 MODEL IS ALREADY INSTALLED."
 else
