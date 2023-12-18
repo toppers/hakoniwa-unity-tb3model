@@ -1654,18 +1654,7 @@ MonoBehaviour:
   on: 1
   settings:
     name: micon_setting
-    rpc_pdu_readers:
-    - type: geometry_msgs/Twist
-      org_name: cmd_vel
-      name: 
-      class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduReader
-      class_path: 
-      conv_class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduReaderConverter
-      conv_class_path: 
-      channel_id: 0
-      pdu_size: 48
-      method_type: UDP
-    rpc_pdu_writers:
+    shm_pdu_writers:
     - type: sensor_msgs/JointState
       org_name: joint_states
       name: 
@@ -1675,8 +1664,7 @@ MonoBehaviour:
       conv_class_path: 
       channel_id: 1
       pdu_size: 440
-      write_cycle: 1
-      method_type: UDP
+      method_type: SHM
     - type: sensor_msgs/Imu
       org_name: imu
       name: 
@@ -1686,8 +1674,7 @@ MonoBehaviour:
       conv_class_path: 
       channel_id: 2
       pdu_size: 432
-      write_cycle: 1
-      method_type: UDP
+      method_type: SHM
     - type: nav_msgs/Odometry
       org_name: odom
       name: 
@@ -1697,8 +1684,7 @@ MonoBehaviour:
       conv_class_path: 
       channel_id: 3
       pdu_size: 944
-      write_cycle: 1
-      method_type: UDP
+      method_type: SHM
     - type: tf2_msgs/TFMessage
       org_name: tf
       name: 
@@ -1708,41 +1694,7 @@ MonoBehaviour:
       conv_class_path: 
       channel_id: 4
       pdu_size: 320
-      write_cycle: 1
-      method_type: UDP
-    - type: sensor_msgs/Image
-      org_name: image
-      name: 
-      class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriter
-      class_path: 
-      conv_class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriterConverter
-      conv_class_path: 
-      channel_id: 5
-      pdu_size: 1024280
-      write_cycle: 1000
-      method_type: MQTT
-    - type: sensor_msgs/CompressedImage
-      org_name: image/compressed
-      name: 
-      class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriter
-      class_path: 
-      conv_class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriterConverter
-      conv_class_path: 
-      channel_id: 6
-      pdu_size: 102664
-      write_cycle: 25
-      method_type: MQTT
-    - type: sensor_msgs/CameraInfo
-      org_name: camera_info
-      name: 
-      class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriter
-      class_path: 
-      conv_class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriterConverter
-      conv_class_path: 
-      channel_id: 7
-      pdu_size: 580
-      write_cycle: 1
-      method_type: UDP
+      method_type: SHM
     - type: sensor_msgs/LaserScan
       org_name: scan
       name: 
@@ -1750,10 +1702,9 @@ MonoBehaviour:
       class_path: 
       conv_class_name: Hakoniwa.PluggableAsset.Communication.Pdu.Raw.RawPduWriterConverter
       conv_class_path: 
-      channel_id: 8
+      channel_id: 5
       pdu_size: 3044
-      write_cycle: 1
-      method_type: MQTT
+      method_type: SHM
 --- !u!1 &437500683709365655
 GameObject:
   m_ObjectHideFlags: 0
@@ -17427,7 +17378,6 @@ GameObject:
   - component: {fileID: 5257385359394754131}
   - component: {fileID: 5257385359394754141}
   - component: {fileID: 5257385359394754140}
-  - component: {fileID: 5257385359394754142}
   m_Layer: 0
   m_Name: CameraSensor
   m_TagString: Untagged
@@ -17501,28 +17451,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5257385359394754130}
   m_Enabled: 0
---- !u!114 &5257385359394754142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5257385359394754130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf56244b1d000c542ac71fa83fb937da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RenderTextureRef: {fileID: 8400000, guid: e2cf70330802bc44ba53fa423c3bc473, type: 2}
-  topic_type:
-  - sensor_msgs/Image
-  - sensor_msgs/CompressedImage
-  - sensor_msgs/CameraInfo
-  topic_name:
-  - image
-  - image/compressed
-  - camera_info
-  update_cycle: 64000000640000000a000000
 --- !u!1 &5257385359829181454
 GameObject:
   m_ObjectHideFlags: 0
