@@ -20,7 +20,7 @@ else
     mv TB3Burgar_01.fbx tb3/Assets/Model/Hakoniwa/Robots/BurgerBot_Model/
 
     echo "INFO: COPYING TB3Assets to hakoniwa plugin(plugin/plugin-srcs/Assets/)"
-    cp -rp tb3/Assets/* plugin/plugin-srcs/Assets/
+    cp -rp tb3/* plugin/plugin-srcs/
 fi
 
 cd plugin
