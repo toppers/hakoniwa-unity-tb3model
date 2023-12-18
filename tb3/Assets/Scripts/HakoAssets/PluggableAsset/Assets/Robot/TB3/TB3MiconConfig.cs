@@ -101,7 +101,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
                 "sensor_msgs/LaserScan",
                 "scan",
                 5,
-                1800),
+                3044),
         };
     }
 
