@@ -59,28 +59,33 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
                 "cmd_vel",
                 0,
                 48),
+            new TB3MiconConfigShmPduReader(
+                "std_msgs/UInt32",
+                "sim_state",
+                1,
+                4),
         };
         public TB3MiconConfigShmPduWriter[] shm_pdu_writers =
         {
             new TB3MiconConfigShmPduWriter(
                 "sensor_msgs/JointState",
                 "joint_states",
-                1,
+                2,
                 440),
             new TB3MiconConfigShmPduWriter(
                 "sensor_msgs/Imu",
                 "imu",
-                2,
+                3,
                 432),
             new TB3MiconConfigShmPduWriter(
                 "nav_msgs/Odometry",
                 "odom",
-                3,
+                4,
                 944),
             new TB3MiconConfigShmPduWriter(
                 "tf2_msgs/TFMessage",
                 "tf",
-                4,
+                5,
                 320),
             // new TB3MiconConfigShmPduWriter(
             //     "sensor_msgs/Image",
@@ -100,8 +105,18 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             new TB3MiconConfigShmPduWriter(
                 "sensor_msgs/LaserScan",
                 "scan",
-                5,
+                6,
                 3044),
+            new TB3MiconConfigShmPduWriter(
+                "geometry_msgs/Vector3",
+                "robot_position",
+                7,
+                24),
+            new TB3MiconConfigShmPduWriter(
+                "std_msgs/UInt32",
+                "robot_state",
+                8,
+                4),
         };
     }
 
