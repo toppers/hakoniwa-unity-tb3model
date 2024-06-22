@@ -21,6 +21,7 @@ else
 
     echo "INFO: COPYING TB3Assets to hakoniwa plugin(plugin/plugin-srcs/Assets/)"
     cp -rp tb3/Assets/* plugin/plugin-srcs/Assets/
+    cp tb3/lidar2d_tb3_spec.json plugin/plugin-srcs/
 fi
 
 

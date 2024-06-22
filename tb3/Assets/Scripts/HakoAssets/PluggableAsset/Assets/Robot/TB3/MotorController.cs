@@ -25,7 +25,7 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         MotorType_Left,
         MotorType_Num
     }
-    public class MotorController : MonoBehaviour, IRobotPartsController
+    public class MotorController : MonoBehaviour, IRobotPartsController, IRobotPartsConfig
     {
         private GameObject root;
         private string root_name;
@@ -199,14 +199,14 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
         };
         public RosTopicMessageConfig[] getRosConfig()
         {
-            RosTopicMessageConfig[] cfg = new RosTopicMessageConfig[topic_type.Length];
-            int i = 0;
-            for (i = 0; i < topic_type.Length; i++)
+            var pcfg = GetRoboPartsConfig();
+            RosTopicMessageConfig[] cfg = new RosTopicMessageConfig[pcfg.Length];
+            for (int i = 0; i < pcfg.Length; i++)
             {
                 cfg[i] = new RosTopicMessageConfig();
                 cfg[i].topic_message_name = this.topic_name[i];
                 cfg[i].topic_type_name = this.topic_type[i];
-                if (cfg[i].topic_message_name == "cmd_vel")
+                if (pcfg[i].io_dir == IoDir.READ)
                 {
                     cfg[i].sub = true;
                 }
@@ -214,11 +214,8 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
                 {
                     cfg[i].sub = false;
                 }
-                cfg[i].pub_option = new RostopicPublisherOption();
-                cfg[i].pub_option.cycle_scale = this.update_cycle[i];
-                cfg[i].pub_option.latch = false;
-                cfg[i].pub_option.queue_size = 1;
             }
+
             return cfg;
         }
         public void DoControl()
@@ -250,6 +247,40 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             this.pdu_joint_state.GetWriteOps().SetData("position", position);
             this.pdu_joint_state.GetWriteOps().SetData("velocity", velocity);
             this.pdu_joint_state.GetWriteOps().SetData("effort", effort);
+        }
+
+        public IoMethod io_method = IoMethod.SHM;
+        public CommMethod comm_method = CommMethod.DIRECT;
+        public RoboPartsConfigData[] GetRoboPartsConfig()
+        {
+            //JointState
+            RoboPartsConfigData[] configs = new RoboPartsConfigData[2];
+            int i = 0;
+            //IMU
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 1024 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            i++;
+
+            //Twist
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.READ;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_reader_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_reader_class;
+            configs[i].value.pdu_size = 48 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            return configs;
         }
     }
 }

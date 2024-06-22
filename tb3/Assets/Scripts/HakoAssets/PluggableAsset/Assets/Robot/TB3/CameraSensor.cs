@@ -6,7 +6,7 @@ using System;
 
 namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
-    public class CameraSensor : MonoBehaviour, IRobotPartsSensor
+    public class CameraSensor : MonoBehaviour, IRobotPartsSensor, IRobotPartsConfig
     {
         private GameObject root;
         private GameObject sensor;
@@ -188,18 +188,21 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         public RosTopicMessageConfig[] getRosConfig()
         {
-            RosTopicMessageConfig[] cfg = new RosTopicMessageConfig[topic_type.Length];
-            int i = 0;
-            for (i = 0; i < topic_type.Length; i++)
+            var pcfg = GetRoboPartsConfig();
+            RosTopicMessageConfig[] cfg = new RosTopicMessageConfig[pcfg.Length];
+            for (int i = 0; i < pcfg.Length; i++)
             {
                 cfg[i] = new RosTopicMessageConfig();
                 cfg[i].topic_message_name = this.topic_name[i];
                 cfg[i].topic_type_name = this.topic_type[i];
-                cfg[i].sub = false;
-                cfg[i].pub_option = new RostopicPublisherOption();
-                cfg[i].pub_option.cycle_scale = this.update_cycle[i];
-                cfg[i].pub_option.latch = false;
-                cfg[i].pub_option.queue_size = 1;
+                if (pcfg[i].io_dir == IoDir.READ)
+                {
+                    cfg[i].sub = true;
+                }
+                else
+                {
+                    cfg[i].sub = false;
+                }
             }
 
             return cfg;
@@ -210,6 +213,51 @@ namespace Hakoniwa.PluggableAsset.Assets.Robot.TB3
             return false;
         }
 
+        public IoMethod io_method = IoMethod.SHM;
+        public CommMethod comm_method = CommMethod.DIRECT;
+        public RoboPartsConfigData[] GetRoboPartsConfig()
+        {
+            RoboPartsConfigData[] configs = new RoboPartsConfigData[3];
+            int i = 0;
+            //sensor_msgs/Image
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 1229080 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            i++;
+
+            //sensor_msgs/CompressedImage
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 1229064 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            i++;
+
+            //sensor_msgs/CameraInfo
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 580 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            return configs;
+        }
     }
 }
 

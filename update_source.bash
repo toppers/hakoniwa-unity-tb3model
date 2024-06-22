@@ -8,3 +8,6 @@ cp plugin/plugin-srcs/Assets/Prefab/Robots/TB3* tb3/Assets/Prefab/Robots/
 
 # scripts
 cp -rp plugin/plugin-srcs/Assets/Scripts/HakoAssets/PluggableAsset/Assets/Robot/TB3 tb3/Assets/Scripts/HakoAssets/PluggableAsset/Assets/Robot/
+
+# specs
+cp plugin/plugin-srcs/lidar2d_tb3_spec.json tb3/

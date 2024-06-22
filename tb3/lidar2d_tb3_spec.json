@@ -1,0 +1,24 @@
+{
+    "frame_id": "laser",
+    "DetectionDistance": {
+        "Min": 120,
+        "Max": 3500
+    },
+    "DistanceAccuracy": {
+        "type": "dependent",
+        "DistanceDepedentAccuracy": {
+            "Percentage": 3.5,
+            "NoiseDistribution": "Gaussian"
+        }
+    },
+    "AngleRange": {
+        "Min": 0.0,
+        "Max": 360.0,
+        "Resolution": 1,
+        "ScanFrequency": 5
+    },
+    "InvalidMeasurement": {
+        "Probability": 0.0,
+        "InvalidValue": "Max"
+    }
+}

@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
 {
-    class IMUSensorArticulationBody : MonoBehaviour, IRobotPartsSensor
+    class IMUSensorArticulationBody : MonoBehaviour, IRobotPartsSensor, IRobotPartsConfig
     {
         private GameObject root;
         private GameObject sensor;
@@ -208,21 +208,67 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
 
         public RosTopicMessageConfig[] getRosConfig()
         {
-            RosTopicMessageConfig[] cfg = new RosTopicMessageConfig[topic_type.Length];
-            int i = 0;
-            for (i = 0; i < topic_type.Length; i++)
+            var pcfg = GetRoboPartsConfig();
+            RosTopicMessageConfig[] cfg = new RosTopicMessageConfig[pcfg.Length];
+            for (int i = 0; i < pcfg.Length; i++)
             {
                 cfg[i] = new RosTopicMessageConfig();
                 cfg[i].topic_message_name = this.topic_name[i];
                 cfg[i].topic_type_name = this.topic_type[i];
-                cfg[i].sub = false;
-                cfg[i].pub_option = new RostopicPublisherOption();
-                cfg[i].pub_option.cycle_scale = this.update_cycle[i];
-                cfg[i].pub_option.latch = false;
-                cfg[i].pub_option.queue_size = 1;
+                if (pcfg[i].io_dir == IoDir.READ)
+                {
+                    cfg[i].sub = true;
+                }
+                else
+                {
+                    cfg[i].sub = false;
+                }
             }
 
             return cfg;
+        }
+        public IoMethod io_method = IoMethod.SHM;
+        public CommMethod comm_method = CommMethod.DIRECT;
+        public RoboPartsConfigData[] GetRoboPartsConfig()
+        {
+            RoboPartsConfigData[] configs = new RoboPartsConfigData[3];
+            int i = 0;
+            //IMU
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 432 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            i++;
+            //Odometry
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 944 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            i++;
+            //TFMessage
+            configs[i] = new RoboPartsConfigData();
+            configs[i].io_dir = IoDir.WRITE;
+            configs[i].io_method = this.io_method;
+            configs[i].value.org_name = this.topic_name[i];
+            configs[i].value.type = this.topic_type[i];
+            configs[i].value.class_name = ConstantValues.pdu_writer_class;
+            configs[i].value.conv_class_name = ConstantValues.conv_pdu_writer_class;
+            configs[i].value.pdu_size = 512 + ConstantValues.PduMetaDataSize;
+            configs[i].value.write_cycle = this.update_cycle[i];
+            configs[i].value.method_type = this.comm_method.ToString();
+            return configs;
         }
         public bool isAttachedSpecificController()
         {
@@ -344,6 +390,5 @@ namespace Assets.Scripts.Hakoniwa.PluggableAsset.Assets.Robot.TB3
             this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("y", (double)delta_angle.y / Time.fixedDeltaTime);
             this.pdu_odometry.GetWriteOps().Ref("twist").Ref("twist").Ref("angular").SetData("z", (double)delta_angle.z / Time.fixedDeltaTime);
         }
-
     }
 }
