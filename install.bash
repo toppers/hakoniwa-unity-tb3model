@@ -10,18 +10,7 @@ else
     exit 1
 fi
 
-echo "INFO: DOWNLOADING TB3 MODEL"
-
-if [ -f tb3/Assets/Model/Hakoniwa/Robots/BurgerBot_Model/TB3Burgar_01.fbx ]
-then
-    echo "INFO: TB3 MODEL IS ALREADY INSTALLED."
-else
-    wget https://github.com/toppers/hakoniwa-unity-tb3model/releases/download/model-v1.0.0/TB3Burgar_01.fbx
-    mv TB3Burgar_01.fbx tb3/Assets/Model/Hakoniwa/Robots/BurgerBot_Model/
-
-    echo "INFO: COPYING TB3Assets to hakoniwa plugin(plugin/plugin-srcs/Assets/)"
-    cp -rp tb3/Assets/* plugin/plugin-srcs/Assets/
-fi
+bash install_tb3.bash
 
 cd plugin
 bash install.bash
